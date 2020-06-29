@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YAOLAN</title>
+  <link rel="stylesheet" href="../static/CSS/home.css" charset="utf-8">
+  <script src="../static/CSS/iconfont/iconfont.js"></script>
+  <style>
+    .icon {
+      width: 2em;
+      height: 2em;
+      vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
+    }
+    </style>
+</head>
+<body>
+  <header>
+    <span id="name">YAOLAN</span>
+    <ul id="nav">
+      <li class="nav_item" id="home">首页</li>
+      <li class="nav_item" id="myConcern">我的关注</li>
+      <li class="nav_item" id="myFans">我的粉丝</li>
+    </ul>
+    <input id="search_input" value="" placeholder="请输入搜索关键词" />
+    <span class="user">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#iconyonghu"></use>
+      </svg>
+    </span>
+  </header>
+  <main>
+    <iframe id="centerIframe" src="./blog.html"></iframe>
+  </main>
+  <footer></footer>
+  <script src="../static/JS/home.js" type="module"></script>
+</body>
+</html>
