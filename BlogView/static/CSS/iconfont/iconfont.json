@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1496125",
+      "name": "用户（女）",
+      "font_class": "user-girl",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "1510327",
+      "name": "用户（男）",
+      "font_class": "user-boy",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "3187393",
+      "name": "用户",
+      "font_class": "yonghu1",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "5441010",
+      "name": "用户1",
+      "font_class": "yonghu2",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
       "icon_id": "8289047",
       "name": "用户",
       "font_class": "yonghu",

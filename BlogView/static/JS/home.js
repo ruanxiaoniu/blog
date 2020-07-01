@@ -11,8 +11,7 @@ window.onload = function() {
     clientHeight = $.clientHeight()
     getBlogHeight(clientWidth, clientHeight)
     // console.log(clientWidth, clientHeight);
-  }
- 
+  } 
   // 点击导航栏
   var nav = document.getElementById('nav')
   var blog = document.getElementById('centerIframe')
@@ -24,15 +23,17 @@ window.onload = function() {
     if(target.tagName === 'LI'){
       if(target.id === 'home') {
         console.log(blog.src);
-        blog.src= './blog.html'
+        blog.src= './views/blog.html'
         document.title = 'YAOLAN'
       }else if(target.id === 'myConcern') {
-        blog.src = './user.html'
+        blog.src = './views/user.html'
         document.title = '我的关注'
       }
     }
   })
 
+  // 监听iframe是否加载完成
+  
 }
 function getBlogHeight(clientWidth, clientHeight) {
   // 获取home中header, footer高度
