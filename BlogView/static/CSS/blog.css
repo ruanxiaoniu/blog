@@ -14,3 +14,14 @@
 .username{
   margin-right: 10px;
 }
+.userDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.contentDiv{
+  margin-top: 20px;
+}
+.contentDiv:hover{
+  cursor: pointer;
+}

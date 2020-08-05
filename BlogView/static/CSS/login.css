@@ -1,0 +1,101 @@
+.login_regist{
+  border: 1px solid rgb(230, 224, 224);
+  position: absolute;
+  width: 25%;
+  /* height: 50%; */
+  top: 20%;
+  left: 50%;
+  border-radius: 10px;
+  transform: translateX(-50%);
+  box-shadow:  0px 0px 10px 5px white;
+  background-color: white;
+}
+.title {
+  color: white;
+  text-shadow: 1px 1px 2px black,
+               0 0 5em rgb(238, 160, 15),
+               0 0 0.2em rgb(238, 160, 15);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  margin-top: 30px;
+
+}
+#login_title{
+  margin-right: 2px;
+  /* text-decoration: underline; */
+  /* border-bottom: 2px solid rgb(238, 160, 15); */
+  cursor: pointer;
+}
+#regist_title{
+  margin-left: 2px;
+  cursor: pointer;
+}
+.register{
+  display: none;
+}
+.login{
+  display: block;
+}
+body{
+  border: none;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.05);
+  font-family: Georgia, serif;
+}
+
+main{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+#username, #password, #repassword{
+  margin-bottom: 20px;
+  font-size: 1em;
+  font-weight: bolder;
+}
+#repassword{
+  margin-left: -35px;
+}
+#forgetPWD{
+  font-size: 0.5em;
+  margin-left: 5px;
+  float: right;
+  margin-top: 5px;
+}
+#forgetPWD > a {
+  color: rgb(55, 209, 209);
+
+}
+#login_submit, #regist_submit{
+  width: 100px;
+  height: 30px;
+  /* background-color: rgb(55, 209, 209);
+  border: 1px solid rgb(55, 209, 209); */
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 1em;
+  font-weight: bolder;
+}
+#login_submit{
+  background-color: rgb(55, 209, 209);
+  border: 1px solid rgb(55, 209, 209);
+}
+#regist_submit{
+  background-color: orange;
+  border: 1px solid orange;
+}
+footer{
+  margin-top: 20px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+.tips{
+  color: red;
+  font-size: 15px;
+  text-align: center
+}

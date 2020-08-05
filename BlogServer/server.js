@@ -1,61 +1,58 @@
 var http = require('http')
 var child_process = require('child_process')
 var fs = require('fs')
-// 数据库
-var mysql = require('mysql')
-var connectionConfig = require('./dataBase/utils')
-var blogSql = require('./dataBase/sqlMap/blog')
-// 创建数据库连接
-var connection = mysql.createConnection(connectionConfig)
-connection.connect()
+var url = require('url')
+// querystring是nodejs内置的一个专用于处理url的模块
+var router = require('./router/index')
 var server = http.createServer((req, res) => {
-  if(req.url == '/') {  
+  console.log('url');
+  var pathname = (url.parse(req.url)).pathname
+  console.log(pathname);
+  if(pathname == '/') {  
     res.writeHead(200, {'Content-Type': 'text/html'})
     var home = fs.readFileSync('../BlogView/views/home.html')
     res.write(home)
     res.end()
-  }else if(req.url == '/views/blog.html') {
+  }else if(pathname == '/views/blog.html') {
     res.writeHead(200, {'Content-Type': 'text/html'})
     var blog = fs.readFileSync('../BlogView/views/blog.html')
     res.write(blog)
     res.end()
-  }else if(req.url == '/views/user.html') {
+  }else if(pathname == '/views/user.html') {
     res.writeHead(200, {'Content-Type': 'text/html'})
     var user = fs.readFileSync('../BlogView/views/user.html')
     res.write(user)
     res.end()
-  }else if(req.url == '/views/myConcern.html') {
+  }else if(pathname == '/views/myConcern.html') {
     res.writeHead(200, {'Content-Type': 'text/html'})
     var myConcern = fs.readFileSync('../BlogView/views/myConcern.html')
     res.write(myConcern)
     res.end()
-  }else if(req.url == '/views/personalInfo.html') {
+  }else if(pathname == '/views/myFans.html') {
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    var myFans = fs.readFileSync('../BlogView/views/myFans.html')
+    res.write(myFans)
+    res.end()
+  }else if(pathname == '/views/personalInfo.html') {
     res.writeHead(200, {'Content-Type': 'text/html'})
     var personalInfo = fs.readFileSync('../BlogView/views/personalInfo.html')
     res.write(personalInfo)
     res.end()
-  }else if(req.url == '/getBlog') {
-    connection.query(blogSql.selectAll, function(err, result) {      
-      var dataObj = {}
-      if(err) {       
-        res.writeHead(500, {'Content-Type': 'application/json'}) 
-        dataObj = {
-          code: -1,
-          message: '访问数据库出错'
-        }
-      }else{
-        res.writeHead(200, {'Content-Type': 'application/json'}) 
-        dataObj = {
-          code: 0,
-          message: '成功',
-          data: result
-        }
-      }
-      res.end(JSON.stringify(dataObj))
-    })
+  }else if(pathname == '/views/login.html') {
+    
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    var login = fs.readFileSync('../BlogView/views/login.html')
+    res.write(login)
+    res.end()
+  }else if(pathname == '/getBlog') {
+    router.blog.getBlog(req, res)
+  }else if(pathname == '/login'){
+    router.user.login(req, res)
+  }else if(pathname == '/register'){
+    router.user.register(req, res)
   }
-  else if(req.url != '/') { // 处理html中获取静态文件
-    var surl = '../BlogView' + req.url
+  else if(pathname != '/') { // 处理html中获取静态文件
+    var surl = '../BlogView' + pathname
     // 获取文件后缀类型
     var type = surl.substr(surl.lastIndexOf(".")+1,surl.length)
     if(type == 'js') {

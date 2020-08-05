@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录</title>
+  <link rel="stylesheet" href="../static/CSS/common.css">
+  <link rel="stylesheet" href="../static/CSS/login.css">
+</head>
+<body>
+  <div class="login_regist">
+    <header class="title"><span id="login_title">登录</span>|<span id="regist_title">注册</span></header>
+    <form class="login" ref>
+    
+      <main>
+        <div id="username">
+          <span>账号</span>
+          <input id="username_input" class="input" placeholder="请输入账号">
+        </div>
+        <div id="password">
+          <span>密码</span>
+          <input type="password" id="password_input" class="input" placeholder="请输入密码">
+          <div>
+            <span id="forgetPWD"><a href="#">忘记密码</a></span>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <button id="login_submit" type="button">登录</button>
+      </footer>
+    </form>
+    <form ref="register" class="register" style="display: none;" autocomplete="off">
+      <main>
+        <div id="username">
+          <span>账号</span>
+          <input lanRequired id="registusername" lanmin="6" lanMax="18" class="input" placeholder="请输入账号">          
+        </div>
+        <div id="password">
+          <span>密码</span>
+          <input lanrequired="true" id="registpassword_input" lanmin="6" lanMax="18" type="password" class="input" placeholder="请再次输入密码">
+        </div>
+        <div id="repassword">
+          <span>确认密码</span>
+          <input lanrequired="true" id="repassword_input" type="password" class="input" lanmessage="两次密码不一样，请再次输入" placeholder="请再次输入密码">
+        </div>
+      
+        <div id="sex">
+          <span>性别</span>
+          <input type="radio" name="sex" value="0" id="femail">
+          <label for="femail">女</label>
+          <input type="radio" name="sex" value="1" id="mail">
+          <label for="mail">男</label>
+        </div>
+      </main>
+      <footer>
+        <button id="regist_submit" type="button">注册</button>
+      </footer>
+    </form>
+   
+    <script src="../static/JS/login.js" type="module"></script>
+</body>
+</html>

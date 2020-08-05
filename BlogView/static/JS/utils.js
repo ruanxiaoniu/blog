@@ -7,6 +7,13 @@ var $ = (function(w) {
     clientHeight: function() {
       let height = document.documentElement.clientHeight
       return height
+    },
+    XMLHttp: function() {
+      if(w.XMLHttpRequest) {
+        return new XMLHttpRequest()
+      }else{
+        return new ActiveXObject('Microsoft.XMLHTTP')
+      }
     }
   }
 })(window)
