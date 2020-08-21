@@ -19,11 +19,12 @@ window.onload = function() {
   nav.addEventListener('click', function(ev) {
     let target = ev.target
     if(target.tagName === 'LI'){
-      if(getToken()) {
-        if(target.id === 'home') {
-          blog.src= './views/blog.html'
-          document.title = 'YAOLAN'
-        }else if(target.id === 'myConcern') {
+      if(target.id === 'home') {
+        blog.src= './views/blog.html'
+        document.title = 'YAOLAN'
+      }
+      else if(getToken()) {
+        if(target.id === 'myConcern') {
           blog.src = './views/user.html?tab=myconcer'
           document.title = '我的关注'
         }else if(target.id === 'myFans') {

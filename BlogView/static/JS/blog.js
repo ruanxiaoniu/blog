@@ -11,17 +11,37 @@ window.onload = function() {
 function getBlog() {
   var res;
   var xmlHttp = $.XMLHttp();
+  var tree = []
   // 请求状态发生改变时
   xmlHttp.onreadystatechange = function() {
     if(xmlHttp.readyState == 4){
-      res = JSON.parse(xmlHttp.responseText) 
+      res = JSON.parse(xmlHttp.responseText)
       if(xmlHttp.status == 200) {
         if(res.code === 0) {
-          console.log('返回来的数');
-          console.log(res.data);
-          
-          // 执行渲染函数
-          render(res.data)
+          var data = Array.from(res.data)
+          // 使用返回的数据的评论去创建一棵树,多少条博客就有多少棵树，博客是树的根节点
+          for(let i = 0; i< data.length; i++) {
+            if(data[i].comment) {
+              for(let j = 0; j < Array.from(data[i].comment).length; j++) {
+                let commentItem  = data[i].comment[j]
+                if(commentItem.comment_id === null) {
+                  let treeItem = new Trees(commentItem)
+                  tree[i] = new Array() // 该微博下对应的评论
+                  tree[i].push(treeItem)
+                }else{ // 不是的话就要找到对应的回复插入做回复的回复
+                  for(let k = 0; k < tree.length; k++) {
+                    if(commentItem.comment_id === tree[i][k].val.id) {
+                      insertNode( tree[i][k], commentItem)
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+         //渲染
+         renderBlog(data, tree)
         }
       }else {
         alert(res.message)
@@ -35,108 +55,117 @@ function getBlog() {
   // return res
 }
 
-// 渲染进页面
-function render(blog) {
-  var blogEle = document.getElementById('blog')
-  for(var i =0 ;i< blog.length; i++) {
-    console.log('comment');
-    console.log(blog[i]);
-    console.log(blog[i].comment);
+
+// 树类
+class Trees{
+  constructor(val) {
+    this.val = val
+    this.chilren = null
+  }
+}
+// insertTree
+function insertNode(currentTree, insertTree) {
+  let chilren = new Trees(insertTree)
+  currentTree.chilren = chilren
+}
+// 遍历树
+function search(tree) {
+  
+  if(tree === null) {
+    return ''
+  }else{
+    console.log('tree');
+    console.log(tree);
+    let type = '评论'
+    if(tree.val.comment_id === null) {
+      type = '评论'
+    }else{
+      type = '回复'
+    }
+    let touxiang = '/static/images/userGirl.png'
+    if(tree.val.sex === 0) {
+      touxiang = '/static/images/userMan.png'
+    }
+    var str = `<div style='margin-left: 20px;margin-top: 10px'>
+                <span>
+                  <img class='touxiangImg' src='${touxiang}'>
+                </span>
+                <span>${tree.val.username}</span>
+                <span>${type}：</span>
+                <span>${tree.val.content}</span>
+                <div class='pinglunsvgDiv'>
+                  <svg class="icon1" aria-hidden="true">
+                    <use xlink:href='#iconpinglun1'></use>
+                  </svg>
+                </div>
+                <div class='svgDiv'>
+                  <svg class="icon2" aria-hidden="true">
+                    <use xlink:href='#icondianzan'></use>
+                  </svg>
+                </div>`
+    return str + search(tree.chilren) + '</div>'
+  }
+}
+// 渲染
+function renderBlog(data, tree) {
+  let blogEle = document.getElementById('blog')
+  data.forEach((item, index) => {
     var section = document.createElement('section')
-    var h4 = document.createElement('h4')
-    var img = document.createElement('img')
-    var imgSpan = document.createElement('span')
-    var usernameSpan = document.createElement('span')
-    var contentSpan = document.createElement('span')
-    var userDiv = document.createElement('div')
-    var contentDiv = document.createElement('div')
-    var commentDiv = document.createElement('div')
-    var commentTile = document.createElement('span')
-    var commentContent = document.createElement('span')
     section.className = 'section'
-    img.src = '../static/images/userGirl.png'
-    img.alt = '头像'
-    img.className = 'touxiangImg'
-    h4.innerHTML = blog[i].title
-    contentSpan.innerHTML = blog[i].content
-    usernameSpan.innerHTML = blog[i].username
-    imgSpan.append(img)
-    usernameSpan.className= 'username'
+    // 用户头像和用户名块
+    var userDiv = document.createElement('div')
     userDiv.className = 'userDiv'
-    contentDiv.className = 'contentDiv'
+    // 用户块中的头像
+    var imgSpan = document.createElement('span')
+    var img = document.createElement('img')
+    if(item.sex === 0) {
+      img.src = '/static/images/userMan.png'
+    }else{
+      img.src = '/static/images/userGirl.png'
+    }
+    img.className = 'touxiangImg'
+    imgSpan.append(img)
+    // 用户块中的用户名
+    var usernameSpan = document.createElement('span')
+    usernameSpan.innerHTML = item.username
+    usernameSpan.className = 'username'
+    // 把用户名和用户头像放进用户块中
     userDiv.append(imgSpan)
     userDiv.append(usernameSpan)
-    contentDiv.append(contentSpan)
-    section.append(h4)
+    // 内容块
+    var contentDiv = document.createElement('div')
+    contentDiv.className = 'contentDiv'
+    contentDiv.innerHTML = item.content
+    // 评论按钮块
+    var pinglunBtn = document.createElement('div')
+    pinglunBtn.className = 'pinglunsvgDiv'
+    var pinglunStr = `<svg class="icon1" aria-hidden="true">
+                        <use xlink:href='#iconpinglun1'></use>
+                      </svg>
+                     `
+    pinglunBtn.innerHTML = pinglunStr
+    var dianznaBtn = document.createElement('div')
+    dianznaBtn.className = 'svgDiv'
+    var dianzanStr = `<svg class="icon2" aria-hidden="true">
+                      <use xlink:href='#icondianzan'></use>
+                    </svg>`
+    dianznaBtn.innerHTML = dianzanStr
+    contentDiv.append(pinglunBtn)
+    contentDiv.append(dianznaBtn) 
+    // 把内容块、用户块放进section中
     section.append(userDiv)
     section.append(contentDiv)
     blogEle.append(section)
-    commentContent.innerHTML = '这是回复'
-    commentTile.innerHTML = '回复：'
-    commentDiv.append(commentTile)
-    commentDiv.append(commentContent)
-    section.append(commentDiv)
-    // 创建评论树形结构
-    let commTrees;
-    if(blog[i].comment) {
-      commTrees = creatTrees(blog[i].comment)
-      console.log('结束返回的tress');
-      console.log(commTrees);
-      var div = document.createElement('div')
-      creatCommTrees()
-    }
-   
-  }
-}
-
-// 创建树形结构（评论内容相当于树）
-function creatTrees(comment) {
-  let trees = []
-  comment.forEach((item,index) => {
-    if(!item.comment_id){ // 创建一棵新树
-      trees.push(new Trees(item)) 
-    }else{
-      console.log('Tree');
-      console.log(trees);
-      trees.forEach((ele, index) => {
-        console.log('ele');
-        console.log(ele.node.id);
-        console.log(item.comment_id);
-        if(ele.node.id === item.comment_id){
-          ele.insertNode(item)
-        }
-      })
+    // 回复块
+    var commentDiv = document.createElement('div')
+    // 存在评论
+    if(tree[index]) {
+      for(let i = 0 ;i< tree[index].length; i++) {
+        // 递归得到DOM结构字符串
+        var result = search(tree[index][i])
+        commentDiv.innerHTML = result
+        section.append(commentDiv)
+      }
     }
   });
-  return trees
-}
-// 树类
-class Trees {
-  constructor(node) {
-    var div = document.createElement('div')
-    var commentTitle = document.createElement('span')
-    var commentContent = document.createElement('span')
-    commentTitle.innerHTML = '回复：'
-    commentContent.innerHTML = `${node.content}`
-    div.append(commentTitle)
-    div.append(commentContent)
-    this.node = node
-    this.comment =div
-    this.chirldren = []
-  }
-  insertNode(data) {
-    console.log(this.chirldren);
-    let chirldren = new Trees(data)
-    this.chirldren.push(chirldren)
-    // this.div.append(chirldren.div)
-  }
-}
-
-// 递归创建回复
-
-
-// 创建回复DOM
-function creatCommTrees(trees) {
-  
-  
 }

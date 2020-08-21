@@ -6,6 +6,62 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3759644",
+      "name": "评论",
+      "font_class": "pinglun",
+      "unicode": "e69b",
+      "unicode_decimal": 59035
+    },
+    {
+      "icon_id": "6557779",
+      "name": "点赞",
+      "font_class": "dianzan",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "7145663",
+      "name": "点赞",
+      "font_class": "dianzan1",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "8165730",
+      "name": "评论",
+      "font_class": "pinglun1",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "11238649",
+      "name": "点赞",
+      "font_class": "bianpinghuatubiaosheji-",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "11238668",
+      "name": "评论",
+      "font_class": "bianpinghuatubiaosheji-1",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "6683432",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "7081088",
+      "name": "微信",
+      "font_class": "weixin1",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
       "icon_id": "1496125",
       "name": "用户（女）",
       "font_class": "user-girl",
