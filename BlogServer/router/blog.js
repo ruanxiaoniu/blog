@@ -37,8 +37,6 @@ var blog = {
         })
       }
       promise.then(function(result) {
-        console.log('dataObj');
-        console.log(dataObj);
         res.end(JSON.stringify(dataObj))
 
         }).catch(function(err) {
@@ -67,6 +65,6 @@ var blog = {
    promise.then(function(res) {
     }).catch(function(err) {
     })
-  }
+  },
 }
 module.exports = blog

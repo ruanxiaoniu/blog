@@ -50,6 +50,10 @@ var server = http.createServer((req, res) => {
     router.user.login(req, res)
   }else if(pathname == '/register'){
     router.user.register(req, res)
+  }else if(pathname =='/publishComment'){
+    router.comment.insertComment(req, res)
+  }else if(pathname == '/getUserById') {
+    router.user.getuserById(req, res)
   }
   else if(pathname != '/') { // 处理html中获取静态文件
     var surl = '../BlogView' + pathname

@@ -1,5 +1,6 @@
 import $ from './utils.js'
 import Form from './form.js'
+import { setToken } from '../../localStorage/index.js'
 window.onload = function() {
   var login = document.getElementsByClassName('login')[0]
   var register = document.getElementsByClassName('register')[0]
@@ -43,8 +44,11 @@ window.onload = function() {
         if(xmlHttp.status === 200) {
           if(xmlHttp.responseText){
             res = JSON.parse(xmlHttp.responseText)
-            console.log(res);
             if(res.code === 0){
+              console.log('res');
+              console.log(res);
+              // 存储
+              setToken(res.id)
               alert('登录成功！')
               window.open('/', '_self')
             }else if(res.code === -1) {
@@ -59,7 +63,6 @@ window.onload = function() {
     xmlHttp.open('post', '/login', true)
     xmlHttp.send(JSON.stringify(data))
   })
-
   // 注册
   regist_submit.addEventListener('click', function(ev) {
    var flag = Form.checkForm('register')
@@ -100,7 +103,6 @@ window.onload = function() {
             res = JSON.parse(xmlHttp.responseText)
             console.log('res.code');
             console.log(res);
-            
             if(res.code === 0) {
               alert('注册成功！')
               // 跳转至登录页
@@ -119,5 +121,6 @@ window.onload = function() {
      xmlHttp.send(JSON.stringify(data))
    }
   })
+
 }
 

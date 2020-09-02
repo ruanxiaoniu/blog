@@ -17,7 +17,8 @@ window.onload = function() {
   var nav = document.getElementById('nav')
   var blog = document.getElementById('centerIframe')
   nav.addEventListener('click', function(ev) {
-    let target = ev.target
+    let event = ev || window.event // (ie的是window.event)
+    let target = event.target || event.srcElement // (ie的是event.srcElement)
     if(target.tagName === 'LI'){
       if(target.id === 'home') {
         blog.src= './views/blog.html'
@@ -88,5 +89,12 @@ function getMenu(user, menu){
 function handle(id, blog) {
   if(id === 'login') {
     window.open('./views/login.html', '_blank')
+  }else if(id === 'personCenter') {
+    if(getToken()) {
+      blog.src = './views/user.html?tab=personalInfo'
+      document.title = '个人中心'
+    }else{
+      alert('请登录！')
+    }
   }
 }
