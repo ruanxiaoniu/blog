@@ -93,3 +93,7 @@
 .btn-warning:focus{
   box-shadow: 0px 0px 1px 1.5px rgb(248, 222, 71);
 }
+.like_num{
+  color: grey;
+  font-size: 14px;
+}

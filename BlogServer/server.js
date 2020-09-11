@@ -54,6 +54,12 @@ var server = http.createServer((req, res) => {
     router.comment.insertComment(req, res)
   }else if(pathname == '/getUserById') {
     router.user.getuserById(req, res)
+  }else if(pathname == '/likeComment') {
+    router.comment.addLike(req, res)
+  }else if(pathname == '/likeBlog'){
+    router.blog.likeBlog(req, res)
+  }else if(pathname == '/getMyConcernBlog') {
+    
   }
   else if(pathname != '/') { // 处理html中获取静态文件
     var surl = '../BlogView' + pathname

@@ -21,3 +21,7 @@ li:hover {
 .liColor{
   background-color: rgb(218, 218, 240);
 }
+#info{
+  width: 100%;
+  border-left: 1px solid black;
+}

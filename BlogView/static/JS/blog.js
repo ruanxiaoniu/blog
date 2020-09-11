@@ -93,7 +93,8 @@ function search(tree) {
         blog_id: tree.val.blog_id,
         username: tree.val.username,
         content: tree.val.content,
-        sex: tree.val.sex === 0 ? 0 : 1
+        sex: tree.val.sex === 0 ? 0 : 1,
+        like_num: tree.val.like_num
       }
       if(tree.chilren.length > 0) {
         for(let i = 0; i <tree.chilren.length; i++) {
@@ -156,6 +157,12 @@ function renderBlog(data, tree) {
                       <use xlink:href='#icondianzan'></use>
                     </svg>`
     dianznaBtn.innerHTML = dianzanStr
+    var likeNum = document.createElement('span')
+    if(item.like_num) {
+      likeNum.innerHTML = `(${item.like_num})`
+    }
+    likeNum.className = 'like_num'
+    dianznaBtn.append(likeNum)
     contentDiv.append(pinglunBtn)
     contentDiv.append(dianznaBtn) 
     // 把内容块、用户块放进section中
@@ -166,12 +173,39 @@ function renderBlog(data, tree) {
      commentDiv.className= 'commentDiv'
     // 点击评论按钮, 显示评论输入框
     pinglunBtn.addEventListener('click', function(ev) {
-      // 阻止冒泡
-      ev.stopPropagation()
-      var commemsubmit = section.getElementsByClassName('commentDiv')[0]
-      var commentFormDiv =  creatCommentForm('commentFormDivShow', item.id, item.comment_id,commemsubmit)
-      let sectionChild = section.firstChild.nextSibling
-      sectionChild.append(commentFormDiv)
+      if(getToken()) {
+        // 阻止冒泡
+        ev.stopPropagation()
+        var commemsubmit = section.getElementsByClassName('commentDiv')[0]
+        let sectionChild = section.firstChild.nextSibling
+        let formArry = Array.from(sectionChild.getElementsByClassName('commentFormDivShow'))
+        // 防止多次点击生成多个表单节点
+        if(!formArry.length > 0) {
+          var commentFormDiv =  creatCommentForm('commentFormDivShow', item.id, item.comment_id,commemsubmit)
+          sectionChild.append(commentFormDiv)
+        }else{
+          // 当已经有评论表单时，再次点击则隐藏表单
+          sectionChild.removeChild(formArry[0])
+        }
+      }else{
+        alert('请登录！')
+      }
+    })
+    dianznaBtn.addEventListener('click', function(ev) {
+      if(getToken()) {
+        // 阻止冒泡
+        ev.stopPropagation()
+        let num = 0
+        if(item.like_num) {
+          num = item.like_num + 1
+        }else{
+          num = 1
+        }
+        // 把点赞数加入数据库
+        dianzanSubmit('blog', item.id, num, dianznaBtn)
+      }else{
+        alert('请登录！')
+      }
     })
     blogEle.append(section)
     // 点击评论区
@@ -200,11 +234,7 @@ function renderComment(tree, commentDiv, section) {
   }
 }
 // 提交发表的评论
-function subimitPublish(data,parent) {
-  console.log('提交在哪');
-  console.log(parent);
-  console.log('数据');
-  console.log(data);
+function subimitPublish(data,parent, commentInput) {
   var xmlHttp = $.XMLHttp()
   var xmlHttp2 = $.XMLHttp()
   let xml2Data = {
@@ -217,16 +247,14 @@ function subimitPublish(data,parent) {
     if(xmlHttp.readyState === 4) {
       if(xmlHttp.status === 200) {
         let resData = JSON.parse(xmlHttp.responseText) 
-        console.log('发表成了');
-        console.log(resData);
         //发表成功后获取这条评论信息，再插入树中
         if(resData.code === 0) {
           // 把id放进数据中
           endData.id = resData.data.id
           endData.blog_id = data.blog_id
           endData.content = data.content
+          commentInput.value = ''
         }     
-        // 重新递归树
       }
     }
   }
@@ -234,8 +262,6 @@ function subimitPublish(data,parent) {
     if(xmlHttp2.readyState === 4) {
       if(xmlHttp2.status === 200) {
         let resData = JSON.parse(xmlHttp2.responseText)
-        console.log('用户信息');
-        console.log(resData);
         endData.username = resData.data[0].username
         if(resData.data[0].username.sex == 0) {
           endData.touxiang = '/static/images/userMan.png'
@@ -247,8 +273,7 @@ function subimitPublish(data,parent) {
   xmlHttp.send(JSON.stringify(data))
   xmlHttp2.open('post', '/getUserById', false)
   xmlHttp2.send(JSON.stringify(xml2Data))
-  console.log('data');
-  console.log(endData);
+  endData.like_num = 0
   var commentStr = createCommentStr(endData, touxiang, type)
   let commentDiv = document.createElement('div')
   commentDiv.innerHTML = commentStr
@@ -256,20 +281,38 @@ function subimitPublish(data,parent) {
 }
 
 // 点击评论区块所需的操作
-function clickComment(ev, tree) {
+function clickComment(ev) {
   let event = ev || window.event
   let target = event.target || event.srcElement
   if(target.tagName === 'svg') {
-    // 点击了评论
-    if(target.className.baseVal === 'icon1'){
+    if(getToken()) {
+      // 点击了评论
       let parent = target.parentNode.parentNode
-      let next = target.parentNode.nextElementSibling.nextElementSibling
-      // 发表评论表单块
-      var commentFormDiv =  creatCommentForm('commentFormDivShow', parent.getAttribute('blog_id'), parent.getAttribute('comment_id'), parent)
-      // commentFormDiv作为parent的子节点在next前插入
-      parent.insertBefore(commentFormDiv, next)
+      if(target.className.baseVal === 'icon1'){
+        let next = target.parentNode.nextElementSibling.nextElementSibling
+        let formArry = Array.from(parent.getElementsByClassName('commentFormDivShow'))
+        if(!formArry.length > 0) {
+          // 发表评论表单块
+          var commentFormDiv =  creatCommentForm('commentFormDivShow', parent.getAttribute('blog_id'), parent.getAttribute('comment_id'), parent)
+          // commentFormDiv作为parent的子节点在next前插入
+          parent.insertBefore(commentFormDiv, next)
+        }else{
+          parent.removeChild(formArry[0])
+        }
+      }else{ // 点击了点赞
+        let value = target.nextElementSibling.innerHTML
+        let like_num = parseInt(value.substring(1, value.length - 1))
+        let id = parent.getAttribute('comment_id')
+        let num = 0
+        if(like_num) {
+          num = like_num + 1
+        }else{
+          num = 1
+        }
+        dianzanSubmit('comment', id, num, target.nextElementSibling)
+      }
     }else{
-
+      alert('请登录！')
     }
   }
 }
@@ -309,7 +352,7 @@ function creatCommentForm(commentDivClassName, blog_id, comment_id, parent){
       }
       // 发表后把评论存进数据库, 有发表内容才会请求
       if(data.content) {
-        subimitPublish(data, parent)
+        subimitPublish(data, parent, commentInput)
       }
       
     })
@@ -339,6 +382,35 @@ function createCommentStr(val, touxiang, type) {
               <svg class="icon2" aria-hidden="true">
                 <use xlink:href='#icondianzan'></use>
               </svg>
+              <span class='like_num'>${val.like_num ? `(${val.like_num})` : ''}</span>
             </div>`
   return str
+}
+
+// 点击了点赞添加点赞数
+function dianzanSubmit(type, id, like_num, target){
+  let numEle
+  if(type === 'blog') {
+    numEle = target.getElementsByClassName('like_num')[0]
+  }
+  var xmlHttp = $.XMLHttp()
+  xmlHttp.onreadystatechange = function() {
+    if(xmlHttp.readyState === 4) {
+      if(xmlHttp.status === 200) {
+        if(type === 'blog') {
+          numEle.innerHTML = `(${like_num})`
+        }else{
+          target.innerHTML = `(${like_num})`
+        }
+      }
+    }
+  }
+  // 点赞博客
+  if(type === 'blog') {
+    xmlHttp.open('post', '/likeBlog')
+    xmlHttp.send(JSON.stringify({id: id, like_num: like_num}))
+  }else{ // 点赞评论
+    xmlHttp.open('post', '/likeComment')
+    xmlHttp.send(JSON.stringify({id: id, like_num: like_num}))
+  }
 }

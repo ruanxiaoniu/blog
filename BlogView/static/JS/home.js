@@ -26,8 +26,9 @@ window.onload = function() {
       }
       else if(getToken()) {
         if(target.id === 'myConcern') {
-          blog.src = './views/user.html?tab=myconcer'
-          document.title = '我的关注'
+          // blog.src = './views/user.html?tab=myconcer'
+          document.title = '我关注的'
+          viewMyConcer()
         }else if(target.id === 'myFans') {
           blog.src = './views/user.html?tab=myFans'
           document.title = '我的粉丝'
@@ -96,5 +97,23 @@ function handle(id, blog) {
     }else{
       alert('请登录！')
     }
+  }else if(id === 'logout') {
+    localStorage.clear()
+    blog.src = './views/blog.html'
   }
+}
+
+// 查看我关注的人的博客
+function viewMyConcer() {
+  let xmlhttp = $.XMLHttp()
+  let id = getToken()
+  xmlhttp.onreadystatechange = function() {
+    if(xmlhttp.readyState === 4) {
+      if(xmlhttp.status === 200) {
+
+      }
+    }
+  }
+  xmlhttp.open('post', '/getMyConcernBlog', false)
+  xmlhttp.send(JSON.stringify({id}))
 }

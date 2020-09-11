@@ -1,6 +1,5 @@
 var mysql = require('mysql')
 var connectionConfig = require('../dataBase/utils')
-var queryString = require('querystring')
 var userSql = require('../dataBase/sqlMap/user')
 var user = {
   // 登录
@@ -113,6 +112,6 @@ var user = {
       })
       connection.end()
     })
-  }
+  },
 }
 module.exports = user

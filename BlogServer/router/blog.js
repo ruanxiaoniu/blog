@@ -2,7 +2,6 @@ var mysql = require('mysql')
 var connectionConfig = require('../dataBase/utils')
 var blogSql = require('../dataBase/sqlMap/blog')
 var commentSql = require('../dataBase/sqlMap/comment')
-var async = require('async')
 var blog = {
   getBlog: function(req, res) {
     var connection = mysql.createConnection(connectionConfig)
@@ -66,5 +65,50 @@ var blog = {
     }).catch(function(err) {
     })
   },
+  likeBlog: function(req, res) {
+    var connection = mysql.createConnection(connectionConfig)
+    connection.connect()
+    let data = ''
+    req.on('data', function(chunk) {
+      data += chunk
+    })
+    req.on('end', function() {
+      data = decodeURI(data)
+      let dataObj = JSON.parse(data)
+      connection.query(blogSql.addLike, [dataObj.like_num, dataObj.id], function(err, result){
+        let resObj = {}
+        if(err) {
+          res.writeHead(500, {'Content-Type': 'application/json'})
+          resObj = {
+            code: -1,
+            message: '操作失败',
+          }
+        }else{
+          res.writeHead(200, {'Content-Type': 'application/json'})
+          resObj = {
+            code: 0,
+            message: '操作成功',
+          }
+        }
+        res.end(JSON.stringify(resObj))
+      })
+      connection.end()
+    })
+  },
+  getMyConcernBlog(req, res) {
+    var connection = mysql.createConnection(connectionConfig)
+    connection.connect()
+    var data = ''
+    req.on('data', function(chunk) {
+      data += chunk
+    })
+    req.on('end', function() {
+      data = decodeURI(data)
+      let dataObj = JSON.parse(data)  
+      connection.query(getMyConcernBlog, [dataObj.id], function(err, result){
+
+      })
+    })
+  }
 }
 module.exports = blog
